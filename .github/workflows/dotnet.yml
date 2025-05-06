@@ -1,26 +1,30 @@
-name: .NET 9 Build
+name: .NET Build with .NET 9
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup .NET 9 Preview SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.100-preview.3'  # Make sure this matches the SDK you're using
+      - name: Setup .NET 9 SDK (preview)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          dotnet-quality: 'preview'
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
